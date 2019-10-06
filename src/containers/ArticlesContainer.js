@@ -1,32 +1,22 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import Articles from '../components/Articles';
+import { getArticles } from '../modules/articles';
 
-import Articles from 'components/Articles';
-
-import { getArticles } from 'redux/articles';
-
-class ArticlesContainer extends Component {
-  componentDidMount() {
-    const { getArticles } = this.props;
+const ArticlesContainer = ({ articles, loading, getArticles }) => {
+  useEffect(() => {
     getArticles();
-  }
+  }, [getArticles]);
 
-  render() {
-    const { articles } = this.props;
-
-    return <Articles articles={articles} />;
-  }
-}
-
-const mapStateToProps = (state, ownProps) => ({
-  articles: state.articles.articles,
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  getArticles: () => dispatch(getArticles()),
-});
+  return <Articles articles={articles} loading={loading} />;
+};
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  ({ articles, loading }) => ({
+    articles,
+    loading,
+  }),
+  {
+    getArticles,
+  },
 )(ArticlesContainer);
